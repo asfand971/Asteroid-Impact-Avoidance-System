@@ -1,0 +1,744 @@
+//BASE class 
+#include <iostream>
+using namespace std;
+class Asteroids
+{
+private:
+	float mass;
+	int x, y, z;
+	int distance;
+	long diameter;
+public:
+	Asteroids();
+	Asteroids(float, int, int, int, int,long);
+	
+	void setmass(float);
+	void setdiameter(long);
+	void setdistance(int);
+	void setx(int);
+	void sety(int);
+	void setz(int);
+	void setall();
+
+	float getmass();
+	int getdistance();
+	int getx();
+	int gety();
+	int getz();
+	long getdiameter();
+	void getall();
+
+};
+
+
+#include "Asteroids.h"
+Asteroids::Asteroids()
+{
+	mass = 0.0;
+	x = y = z = 0;
+	diameter = 0;
+	distance = 0;
+}
+Asteroids::Asteroids(float m,int d, int x_input, int y_input, int z_input,long diam)
+{
+	mass = m;
+	diameter = diam;
+	x = x_input;
+	y = y_input;
+	z = z_input;
+	distance = d;
+}
+void Asteroids::setmass(float m)
+{
+	mass = m;
+}
+void Asteroids::setdiameter(long dim)
+{
+	diameter = dim;
+}
+void Asteroids::setdistance(int d)
+{
+	distance = d;
+}
+
+void Asteroids::setx(int x_input)
+{
+	x = x_input;
+}
+
+void Asteroids::sety(int y_input)
+{
+	y = y_input;
+}
+
+void Asteroids::setz(int z_input)
+{
+	z = z_input;
+}
+
+float Asteroids::getmass()
+{
+	return mass;
+}
+
+int Asteroids::getx()
+{
+	return x;
+}
+
+int Asteroids::gety()
+{
+	return y;
+}
+
+int Asteroids::getz()
+{
+	return z;
+}
+
+int Asteroids::getdistance()
+{
+	return distance;
+}
+long Asteroids::getdiameter()
+{
+	return diameter;
+}
+
+void Asteroids::setall()
+{
+	float mass = 0.0;
+	long dia = 0;
+	int x, y, z;
+	int dist = 0;
+	x = y = z = 0;
+	cout << "Enter mass of Asteroid" << endl;
+	cin >> mass;
+	cout << "Enter distance from Earth" << endl;
+	cin >> dist;
+	cout << "Enter Diameter of Asteroid" << endl;
+	cin >> dia;
+	cout << "Enter x coordinate" << endl;
+	cin >> x;
+	cout << "Enter y coordinate" << endl;
+	cin >> y;
+	cout << "Enter z coordinate" << endl;
+	cin >> z;
+	setmass(mass);
+	setdistance(dist);
+	setx(x);
+	sety(y);
+	setz(z);
+	setdiameter(dia);
+}
+
+void Asteroids::getall()
+{
+	if (getmass() == 1.0)
+	{
+		cout << "Mass = " << getmass() << "  Tonne" << endl;
+	}
+	else
+	{
+		cout << "Mass = " << getmass() << " Tonnes" << endl;
+	}
+	cout << "Diameter of Asteroid = " << getdiameter() << endl;
+	cout << "Distance of Asteroid from Earth = " << getdistance() << endl;	
+	cout << "X coordinate = " << getx() << endl;
+	cout << "Y coordinate = " << gety() << endl;
+	cout << "Z coordinate = " << getz() << endl;
+}
+
+
+//Used to store Asteroid insterted by user in QUEUE
+#include "Asteroids.h"
+class AQnode
+{
+public:
+	Asteroids bolder;
+	AQnode* next;
+	AQnode();
+};
+
+
+#include "AQnode.h"
+AQnode::AQnode()
+{
+	next= NULL;
+}
+
+//Asteroid Queue immplementation
+#include "AQnode.h"
+class AQueue
+{
+public:
+	AQnode* fr, * rr;
+	AQueue();
+	void A_enqueue(Asteroids);
+	void A_dequeue();
+	Asteroids front_Asteroids();
+	void Display_Aesteroids();
+};
+
+#include "AQueue.h"
+AQueue::AQueue()
+{
+	fr = NULL;
+	rr = NULL;
+
+}
+
+void AQueue::Display_Aesteroids()
+{
+	AQnode* temp = fr;
+	while (temp != NULL)
+	{
+		temp->bolder.getall(); cout << endl;
+		temp = temp->next;
+	}
+
+}
+void AQueue::A_enqueue(Asteroids val)
+{
+	AQnode* temp = new AQnode;
+	temp->bolder = val;
+	temp->next = NULL;
+	if (fr == NULL && rr == NULL)
+	{
+		fr = rr = temp;
+		return;
+	}
+	rr->next = temp;
+	rr = temp;
+}
+void AQueue::A_dequeue()
+{
+	AQnode* temp = fr;
+	if (fr == NULL)
+	{
+		cout << "Queue is Empty\n";
+		return;
+	}
+	if (fr == rr)
+	{
+		fr = rr = NULL;
+	}
+	else
+		fr = fr->next;
+	delete temp;
+}
+Asteroids AQueue::front_Asteroids()
+{
+	if (fr == NULL)
+	{
+		cout << "No Asteroid in Queue\n";
+	
+	}
+	else
+	{
+		return fr->bolder;
+	}
+
+
+}
+#include "AQueue.h"
+class AHeap
+{
+	public:
+		int* harr;
+		int capacity;
+		int heap_size;
+		AHeap();
+		AHeap(int);
+		void MinHeapify(int);
+		int parent(int);
+		int left(int);
+		int right(int);
+		int extractMin();
+		void decreaseKey(int, int);
+		int getMin();
+		void deleteKey(int);
+		void insertKey(int);
+		void swap(int*, int*);
+		void display();
+};
+
+#include "AHeap.h"
+AHeap::AHeap()
+{
+	heap_size = 0;
+	capacity = 5;
+	harr = new int[5];
+}
+AHeap::AHeap(int cap)
+{
+	heap_size = 0;
+	capacity = cap;
+	harr = new int[cap];
+}
+
+int AHeap::parent(int indx)
+{
+	return (indx - 1) / 2;
+}
+int AHeap::left(int indx)
+{
+	return (2 * indx + 1);
+}
+int AHeap::right(int indx)
+{
+	return (2 * indx + 2);
+}
+
+int AHeap::getMin()
+{
+	return harr[0];
+}
+void AHeap::insertKey(int newval)
+{
+	if (heap_size == capacity)
+	{
+		cout << "Can not insert Key" << endl;
+		return;
+	}
+	heap_size++;
+	int indx = heap_size - 1;
+	harr[indx] = newval;
+	while (indx != 0 && harr[parent(indx)] > harr[indx])
+	{
+		swap(&harr[indx], &harr[parent(indx)]);
+		indx = parent(indx);
+	}
+	cout << "Key = " << newval << " has been inserted in heap !" << endl;
+}
+void AHeap::decreaseKey(int old_val, int new_val)
+{
+	int loc = 0;
+	for (int indx = 0; indx < heap_size; indx++)
+	{
+		if (harr[indx] == old_val)
+		{
+			harr[indx] = new_val;
+			loc = indx;
+		}
+	}
+	while (loc != 0 && harr[parent(loc)] > harr[loc])
+	{
+		swap(&harr[loc], &harr[parent(loc)]);
+		loc = parent(loc);
+	}
+}
+int AHeap::extractMin()
+{
+	if (heap_size <= 0)
+		return INT_MAX;
+	if (heap_size == 1)
+	{
+		heap_size--;
+		delete harr;
+		return 0;
+	}
+	int root = harr[0];
+	harr[0] = harr[heap_size - 1];
+	heap_size--;
+	MinHeapify(0);
+	return root;
+}
+void AHeap::deleteKey(int indx)
+{
+	if (indx == getMin())
+	{
+		extractMin();
+		cout << "Min deleted" << endl;
+
+	}
+	else
+	{
+		decreaseKey(indx, INT_MIN);
+		extractMin();
+		cout << "Key = " << indx << " has been deleted from the heap !" << endl;
+	}
+}
+void AHeap::MinHeapify(int indx)
+{
+	int l = left(indx);
+	int r = right(indx);
+	int smallest = indx;
+	if (l < heap_size && harr[l] < harr[indx])
+		smallest = l;
+	if (r < heap_size && harr[r] < harr[smallest])
+		smallest = r;
+	if (smallest != indx)
+	{
+		swap(&harr[indx], &harr[smallest]);
+		MinHeapify(smallest);
+	}
+}
+void AHeap::swap(int* val1, int* val2)
+{
+	int temp = *val1;
+	*val1 = *val2;
+	*val2 = temp;
+}
+void AHeap::display()
+{
+	for (int indx = 0; indx < heap_size; indx++)
+	{
+		cout << harr[indx] << " ";
+	}
+	cout << endl;
+}
+
+//NEO Management system
+#include "AHeap.h"
+class ATnode
+{
+public:
+	Asteroids data;
+	ATnode* left, * right;
+	ATnode();
+	ATnode(Asteroids);
+};
+
+#include "ATnode.h"
+ATnode::ATnode()
+{
+	left = right = NULL;
+}
+ATnode::ATnode(Asteroids dat)
+{
+	data = dat;
+}
+
+#include "ATnode.h"
+class ABST
+{
+public:
+	ATnode* root;
+	ABST();
+	ABST(Asteroids);
+	void insert(ATnode**, Asteroids);
+	void delnode(ATnode**, Asteroids);
+	bool isEmpty();
+	bool Search(ATnode*, int);
+	ATnode* getParent(ATnode*, int);
+	ATnode* findMin(ATnode*);
+	void inorder(ATnode*);
+};
+
+#include "ABST.h"
+ABST::ABST()
+{
+	this->root = NULL;
+}
+ABST::ABST(Asteroids dat)
+{
+	this->root = new ATnode(dat);
+}
+bool ABST::isEmpty()
+{
+	if (root == NULL)
+		return true;
+	else
+		return false;
+}
+void ABST::insert(ATnode** curr, Asteroids val)
+{
+	if (*curr == NULL)
+	{
+		ATnode* node = new ATnode(val);
+		*curr = node;
+	}
+	else
+	{
+		if (val.getdistance() < (*curr)->data.getdistance())
+			insert(&(*curr)->left, val);
+		else if (val.getdistance() >= (*curr)->data.getdistance())
+			insert(&(*curr)->right, val);
+	}
+}
+void ABST::inorder(ATnode* curr)
+{
+	if (curr == NULL)
+		return;
+	inorder(curr->left);
+	curr->data.getall();
+	inorder(curr->right);
+}
+bool ABST::Search(ATnode* curr, int key)
+{
+	if (curr == NULL)
+		return false;
+	else if (curr->data.getdistance() == key)
+		return true;
+	else if (curr->data.getdistance() > key)
+		Search(curr->left, key);
+	else if (curr->data.getdistance() < key)
+		Search(curr->right, key);
+}
+
+ATnode* ABST::getParent(ATnode* curr, int key)
+{
+	if (curr == NULL)
+		return NULL;
+	else if ((curr->left != NULL) && (curr->left->data.getdistance() == key))
+		return curr;
+	else if ((curr->right != NULL) && (curr->right->data.getdistance() == key))
+		return curr;
+	else if (curr->data.getdistance() > key)
+		return getParent(curr->left, key);
+	else if (curr->data.getdistance() < key)
+		return getParent(curr->right, key);
+}
+ATnode* ABST::findMin(ATnode* curr)
+{
+	if (curr->left == NULL)
+		return curr;
+	else
+		return findMin(curr->left);
+}
+
+void ABST::delnode(ATnode** curr, Asteroids val)
+{
+	if (*curr == NULL)
+	{
+		cout << "Node not found" << endl;
+		return;
+	}
+	else if ((*curr)->data.getdistance() > val.getdistance())
+		delnode(&(*curr)->left, val);
+	else if ((*curr)->data.getdistance() < val.getdistance())
+		delnode(&(*curr)->right, val);
+	else if ((*curr)->data.getdistance() == val.getdistance())
+	{
+		if (((*curr)->left == NULL) && ((*curr)->right == NULL))
+		{
+			ATnode* p = getParent(*curr, val.getdistance());
+			if (p->left == *curr)
+				p->left = NULL;
+			else if (p->right == *curr)
+				p->right = NULL;
+			*curr = NULL;
+			delete* curr;
+		}
+		else if ((((*curr)->left == NULL) && ((*curr)->right != NULL)) || (((*curr)->left != NULL) && ((*curr)->right == NULL)))
+		{
+			ATnode* p = getParent(root, (*curr)->data.getdistance());
+			if ((*curr)->left != NULL)
+			{
+				if (p->left == *curr)
+				{
+					p->left = (*curr)->left;
+					*curr = p->left;
+				}
+				else if (p->right == *curr)
+				{
+					p->right = (*curr)->left;
+					*curr = p->right;
+				}
+			}
+			else if ((*curr)->right != NULL)
+			{
+				if (p->left == *curr)
+				{
+					p->left = (*curr)->right;
+					*curr = p->right;
+				}
+				else if (p->right == *curr)
+				{
+					p->right = (*curr)->right;
+					*curr = p->right;
+				}
+			}
+		}
+		else if (((*curr)->left != NULL) && ((*curr)->right != NULL))
+		{
+			ATnode* min = findMin((*curr)->right);
+			int m = min->data.getdistance();
+			delnode(&(*curr), min->data);
+			(*curr)->data.setdistance(m);
+		}
+	}
+}
+
+#include "ABST.h"
+ABST obt;
+void addtree(Asteroids val)
+{	
+	if (val.getdistance() <= 2000)
+	{
+		obt.insert(&obt.root,val);
+	}
+}
+void pattern(int wave_height, int wave_length)
+{
+	int i, j, k, e, n, count, x;
+	e = 2;
+	x = 1;
+
+	// for loop for height of wave 
+	for (i = 0; i < wave_height; i++) {
+
+		for (j = wave_height; j <= wave_height + i; j++)
+			cout << " ";
+
+		// for loop for wave length 
+		for (count = 1; count <= wave_length; count++) {
+
+			// checking for intermediate spaces 
+			for (n = (wave_height + wave_height - 2); n >= x; n--)
+				cout << " ";
+			for (k = 1; k <= e; k++) {
+				if (k == 1)
+					cout << "/";
+				else if (k == e)
+					cout << "\\";
+				else
+					cout << " ";
+			}
+		}
+
+		// incrementing counters value by two 
+		x = x + 2;
+		e = e + 2;
+		cout << endl;
+	}
+}
+void wave()
+{
+	int wave_height = 5;
+
+	// change value to decrease or increase  
+	// the length of wave 
+	int wave_length = 5;
+
+	pattern(wave_height, wave_length);
+	// Function definition 
+	
+}
+void intro()
+{
+	cout << "    ***************************************************" << endl;
+	wave();
+	cout << "    ***************************************************" << endl;
+	cout << "    *                                                 *" << endl;
+	cout << "    *                                                 *" << endl;
+	cout << "    *        Asteroid Impact Avoidance                *" << endl;
+	cout << "    *                System                           *" << endl;
+	cout << "    *                                                 *" << endl;
+	cout << "    ***************************************************" << endl;
+	wave();
+	cout << "    ***************************************************" << endl;
+	system("pause");
+	system("cls");
+}
+int selection()
+{
+	int choie = 0;
+	char cho = 'y';
+	while(cho=='y'){
+	cout << "    ***************************************************" << endl;
+	wave();
+	cout << "    ***************************************************" << endl;
+	cout << "    Enter 1 to ADD a new asteroid:" << endl;
+	cout << "    Enter 2 to delete an Asteroid:" << endl;
+	cout << "    Enter 3 to display all Near Earth Objects (Distance < 2000):" << endl;
+	cout << "    Enter 4 to get best mean of avoidance" << endl;
+	cout << "    Enter 5 to Exit" << endl;
+	cout << "    ***************************************************" << endl;
+	wave();
+	cout << "    ***************************************************" << endl;
+	cin >> choie;
+		switch (choie)
+		{
+		case 1:
+			return 1;
+			break;
+		case 2:
+			return 2;
+			break;
+		case 3:
+			return 3;
+			break;
+		case 4:
+			return 4;
+			break;
+		case 5:
+			return 5;
+			break;
+		default:
+			cerr << "Invalid Selection !" << endl;
+			return 0;
+			break;
+		}
+	}
+}
+void menu()
+{
+	AQueue obj;
+	Asteroids obj1;
+	//int size = 0;
+	char ch = ' ';
+	
+	AHeap hpobj(1);
+	intro();
+	string count = "y";
+	while (count == "y")
+	{
+	switch (selection())
+	{
+	case 1:
+		system("cls");
+		cout << "Enter Asteroid in QUEUE" << endl; //First input 
+		obj1.setall();
+		obj.A_enqueue(obj1);
+		hpobj.insertKey((int)obj1.getmass());	//inserted in heap
+		addtree(obj1);
+		break;
+	case 2:
+		system("cls");
+		cout << "Asteroid Deleted from QUEUE" << endl;
+		obt.delnode(&obt.root, obj.front_Asteroids());
+		hpobj.deleteKey(obj.front_Asteroids().getmass());
+		obj.A_dequeue();
+		break;
+	case 3:
+		system("cls");
+		cout << "Do you want to Display Near Earth Object details or Only Asteroids mass! (a / m)" << endl;
+		cin >> ch;
+		if (ch == 'a')
+		{
+			cout << "Near Earth Objects :" << endl;
+			obt.inorder(obt.root);
+		}
+		else
+		{
+			hpobj.display();
+		}
+		break;
+	case 4:
+		system("cls");
+		cout << "Best mean of avoidance GRAPH DSA" << endl;
+		break;
+	case 5:
+		system("cls");
+		//return;
+		break;
+	default:
+		system("cls");
+		cout << "LOL NOT possible!" << endl;
+	}
+	cout << "Do you want to Countinue (y/n)" << endl;
+	cin >> count;
+}
+}
+
+int main()
+{
+	
+		menu();
+	
+	
+	system("pause");
+	return 0;
+}
